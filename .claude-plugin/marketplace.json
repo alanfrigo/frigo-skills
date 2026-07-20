@@ -1,0 +1,26 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "frigo-skills",
+  "owner": {
+    "name": "Alan Frigo",
+    "email": "alanfrigo@gmail.com"
+  },
+  "metadata": {
+    "description": "Alan Frigo's Claude Code skills marketplace."
+  },
+  "plugins": [
+    {
+      "name": "frigo-skills",
+      "source": "./",
+      "description": "Drone CI/CD and Azure Databricks skills (CLI, Apps, Bundles).",
+      "category": "development",
+      "keywords": [
+        "drone",
+        "ci-cd",
+        "azure",
+        "databricks",
+        "cli"
+      ]
+    }
+  ]
+}

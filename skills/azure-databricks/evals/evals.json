@@ -1,0 +1,47 @@
+{
+  "skill_name": "azure-databricks",
+  "evals": [
+    {
+      "id": 0,
+      "name": "entra-sp-auth",
+      "prompt": "I need to set up the databricks CLI on a CI runner to talk to our Azure Databricks workspace at https://adb-5555555555555555.19.azuredatabricks.net. Auth has to use our Azure AD service principal (I have the tenant id, application/client id, and a client secret) — no personal access tokens. Show me the .databrickscfg profile and/or the environment variables to use.",
+      "expected_output": "An Entra ID service principal configuration: a .databrickscfg profile with host plus azure_tenant_id / azure_client_id / azure_client_secret (and/or the ARM_TENANT_ID / ARM_CLIENT_ID / ARM_CLIENT_SECRET + DATABRICKS_HOST env vars), the Azure-format adb-* host, and a note that this method needs the Azure CLI installed. Must NOT use a PAT (token=) and must NOT confuse these with the Databricks OAuth M2M fields (client_id/client_secret / DATABRICKS_CLIENT_ID).",
+      "files": [],
+      "assertions": [
+        {"text": "Uses Entra ID service principal fields: azure_tenant_id, azure_client_id, azure_client_secret in .databrickscfg and/or ARM_TENANT_ID, ARM_CLIENT_ID, ARM_CLIENT_SECRET env vars", "type": "content"},
+        {"text": "Sets host (or DATABRICKS_HOST) to the Azure adb-*.azuredatabricks.net workspace URL", "type": "content"},
+        {"text": "Does NOT use a personal access token (no token= / DATABRICKS_TOKEN) since the user explicitly excluded PATs", "type": "content"},
+        {"text": "Does NOT substitute the Databricks OAuth M2M fields (client_id/client_secret or DATABRICKS_CLIENT_ID/DATABRICKS_CLIENT_SECRET) for the Entra ARM_/azure_ fields", "type": "content"},
+        {"text": "Notes the Entra SP method requires the Azure CLI (az) to be installed on the machine", "type": "content"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "streamlit-app-deploy",
+      "prompt": "I have a Streamlit dashboard (app.py) that queries a Databricks SQL warehouse. Help me deploy it to Databricks Apps on our Azure workspace using the databricks CLI. It needs a SECRET_TOKEN from our secret scope and the warehouse id — I don't want either of them hardcoded in the repo. Give me the app.yaml and the CLI commands.",
+      "expected_output": "An app.yaml with command ['streamlit','run','app.py'] and an env list where SECRET_TOKEN uses valueFrom: secret and the warehouse uses valueFrom: sql_warehouse (NOT value:). CLI flow: databricks apps create <name>, databricks sync (local -> /Workspace path), then databricks apps deploy <name> --source-code-path <workspace path>. Bonus: mentions the app runs under its own service principal and/or the 10 MB per-file limit / Premium requirement.",
+      "files": [],
+      "assertions": [
+        {"text": "app.yaml sets command to run Streamlit, e.g. command: ['streamlit', 'run', 'app.py']", "type": "content"},
+        {"text": "The secret and warehouse are provided via valueFrom (valueFrom: secret and valueFrom: sql_warehouse), NOT via a plaintext value:", "type": "content"},
+        {"text": "Provides the CLI lifecycle: databricks apps create, then databricks sync (or workspace import-dir) to push code, then databricks apps deploy", "type": "content"},
+        {"text": "Does NOT hardcode the secret token anywhere (no secret string in app.yaml value or in code)", "type": "content"},
+        {"text": "Mentions the app's own service principal, the 10 MB per-file limit, or the Premium-tier requirement as a relevant caveat", "type": "content"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "bundle-dev-prod",
+      "prompt": "Set up a Databricks Asset Bundle (databricks.yml) for our job so we can deploy the same job to a dev and a prod Azure workspace and promote between them. Dev workspace is https://adb-1111111111111111.2.azuredatabricks.net and prod is https://adb-9999999999999999.7.azuredatabricks.net. Give me the databricks.yml and the exact commands to validate and to deploy to prod.",
+      "expected_output": "A databricks.yml with a bundle.name, a resources.jobs entry, and targets: dev and prod, each setting its own workspace.host to the correct adb-* URL (preferring workspace.host over relying only on default: true), ideally with mode: development / production. Commands: databricks bundle validate and databricks bundle deploy -t prod (and databricks bundle run <job> for running). Should recognize DAB = Declarative Automation Bundles (same tooling).",
+      "files": [],
+      "assertions": [
+        {"text": "databricks.yml includes bundle.name, a resources.jobs.<job> definition, and a targets block with dev and prod", "type": "content"},
+        {"text": "Each target sets its own workspace.host to the matching adb-*.azuredatabricks.net URL (dev vs prod)", "type": "content"},
+        {"text": "Provides databricks bundle validate and databricks bundle deploy -t prod (explicit target for prod, not a bare deploy)", "type": "content"},
+        {"text": "Does not put any credentials/tokens inside databricks.yml (auth comes from a profile matched by host or -p)", "type": "content"},
+        {"text": "Treats Databricks Asset Bundles and Declarative Automation Bundles as the same tooling if the rename is mentioned", "type": "content"}
+      ]
+    }
+  ]
+}

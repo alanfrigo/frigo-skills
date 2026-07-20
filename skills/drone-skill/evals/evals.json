@@ -1,0 +1,47 @@
+{
+  "skill_name": "drone-skill",
+  "evals": [
+    {
+      "id": 0,
+      "name": "node-postgres-docker",
+      "prompt": "I've got a Node.js app in a GitHub repo that's connected to our self-hosted Drone. Can you write me a .drone.yml? It needs to install dependencies and run `npm test`, but the tests need a Postgres 15 database to talk to. Then, only when I push a git tag, it should build a Docker image and push it to Docker Hub. My Docker Hub username and password are sensitive so don't put them in the file directly.",
+      "expected_output": "A valid Docker-type .drone.yml with: kind/type/name header; a services block running postgres:15; a test step that reaches Postgres by its service hostname (not localhost) and ideally waits for readiness; Docker Hub credentials pulled via from_secret; a build/push step using the plugins/docker plugin restricted to tag events via trigger or when.",
+      "files": [],
+      "assertions": [
+        {"text": "Includes a valid pipeline header (kind: pipeline, type: docker, and a name)", "type": "yaml_structure"},
+        {"text": "Defines a services block that runs a postgres:15 (or postgres) image", "type": "content"},
+        {"text": "The test step connects to Postgres by the service name as hostname, and does NOT use localhost or 127.0.0.1", "type": "content"},
+        {"text": "Docker Hub username and password are provided via from_secret, with no plaintext credentials anywhere in the YAML", "type": "content"},
+        {"text": "The Docker image build/push runs only on tag events (event: tag in a trigger or when block)", "type": "content"},
+        {"text": "Uses the plugins/docker plugin (settings-based) to build and push the image rather than hand-written docker login/build/push shell", "type": "content"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "cron-seconds-bug",
+      "prompt": "On my self-hosted Drone I set up a nightly job with `drone cron add myorg/api nightly \"0 2 * * *\"` because I want it to run at 2am. But it's running at totally random times, not 2am. What's going on and how do I fix it?",
+      "expected_output": "Explanation that Drone cron expressions use SIX space-separated fields with a leading seconds field, so the 5-field expression is being misparsed (each field shifts). The fix is a 6-field expression such as \"0 0 2 * * *\". Bonus: mentions schedules are evaluated in UTC and/or that the scheduler is approximate (hourly batches).",
+      "files": [],
+      "assertions": [
+        {"text": "Correctly identifies the root cause: Drone cron uses six fields with a leading seconds field, so the five-field expression is wrong/misparsed", "type": "content"},
+        {"text": "Provides a corrected six-field expression that runs at 2am, e.g. \"0 0 2 * * *\"", "type": "content"},
+        {"text": "Does NOT incorrectly claim the original 5-field \"0 2 * * *\" is valid standard cron that Drone accepts as-is", "type": "content"},
+        {"text": "Mentions UTC evaluation and/or the approximate hourly-batch scheduling as additional context", "type": "content"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "manual-promotion",
+      "prompt": "We want production deploys on our Drone setup to be manual, not automatic on every push. The repo is myorg/api. Set up the pipeline so the deploy only happens when someone promotes a build to 'production', and give me the exact drone CLI commands to (1) store our deploy SSH key (it's in ./deploy_key) as a secret and (2) promote build number 128 to production.",
+      "expected_output": "A pipeline (or step) gated on event: promote with target: production so ordinary pushes don't deploy; a `drone secret add` command that stores the SSH key from the ./deploy_key file (using --name and @./deploy_key or --data @./deploy_key); and the correct `drone build promote myorg/api 128 production` command.",
+      "files": [],
+      "assertions": [
+        {"text": "The deploy pipeline or step is gated on event: promote AND target: production (via trigger or when)", "type": "content"},
+        {"text": "Correctly ensures the deploy does NOT run on ordinary push events", "type": "content"},
+        {"text": "Provides a drone secret add command that stores the key from the ./deploy_key file (e.g. --data @./deploy_key)", "type": "content"},
+        {"text": "Provides the correct promote command: drone build promote myorg/api 128 production (repo, build number, environment in that order)", "type": "content"},
+        {"text": "The stored secret is referenced in the pipeline via from_secret", "type": "content"}
+      ]
+    }
+  ]
+}

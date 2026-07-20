@@ -1,0 +1,19 @@
+{
+  "name": "frigo-skills",
+  "description": "Alan Frigo's personal collection of Claude Code skills — Drone CI/CD and Azure Databricks (CLI, Apps, Bundles), with more to come.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Alan Frigo",
+    "email": "alanfrigo@gmail.com"
+  },
+  "homepage": "https://github.com/alanfrigo/frigo-skills",
+  "repository": "https://github.com/alanfrigo/frigo-skills",
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "drone",
+    "ci-cd",
+    "azure",
+    "databricks"
+  ]
+}
