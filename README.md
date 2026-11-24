@@ -11,11 +11,15 @@ the marketplace once and pick up every skill, with new ones dropping in over tim
 |-------|--------------|-------------|
 | **`drone-skill`** | Author and debug Drone CI/CD `.drone.yml` pipelines and drive the `drone` CLI. | `.drone.yml`, `drone exec`, Drone builds/secrets/crons/promotions. |
 | **`azure-databricks`** | Work with Azure Databricks: the `databricks` CLI, Databricks Apps, and Declarative Automation Bundles (DAB). | `databricks` CLI, `.databrickscfg`, `databricks.yml`, Databricks Apps, `app.yaml`, `adb-*.azuredatabricks.net`. |
+| **[`asset-3d`](skills/asset-3d/SKILL.md)** | Create and validate low-poly or detailed 3D assets. Local ComfyUI + Blender, procedural modeling, licensed sources, and authorized hosted backends. | Image/text-to-3D, TRELLIS.2, Pixal3D, Hunyuan3D, retopology, GLB/PBR/LOD. |
+| **[`animation-3d`](skills/animation-3d/SKILL.md)** | Rig, choreograph, retarget and validate 3D animation using Richard Williams as the performance reference. | Keyframe animation, mocap, MotionBricks, feet/contact, clip loops, root motion. |
 
-All skills are knowledge, not code — they teach the agent accurate, up-to-date
-syntax instead of guessing from memory. They have no runtime dependencies; running
-what they suggest requires the relevant CLI (`drone`, `databricks`) in your
-environment.
+Each skill provides workflow knowledge; the 3D skills also ship runnable helpers.
+The local asset route needs a running ComfyUI with model weights plus Blender.
+Blender is sufficient for the offline reference scenes, export and QA. See the
+[asset benchmark](skills/asset-3d/references/benchmark.md) and
+[animation QA benchmark](skills/animation-3d/references/qa.md#observed-on-the-reference-fixture)
+for reproducible commands and measured results.
 
 ## Install
 
@@ -30,10 +34,9 @@ This repo is a Claude Code marketplace named `frigo-skills` that ships one plugi
 /plugin install frigo-skills@frigo-skills
 ```
 
-Once installed, Claude auto-invokes whichever skill matches your task — ask about a
-`.drone.yml` and it uses `drone-skill`; ask to set up the Databricks CLI on Azure
-and it uses `azure-databricks`. Their descriptions are disambiguated so they don't
-cross-trigger.
+Once installed, Claude auto-invokes the matching skill, or you can invoke one
+directly with `/frigo-skills:asset-3d` or `/frigo-skills:animation-3d`. Use the
+full skill directories (not just `SKILL.md`) in other Agent Skills harnesses.
 
 ### Local development (before publishing)
 
@@ -48,6 +51,13 @@ Point Claude Code at the working copy without going through GitHub:
 claude --plugin-dir .
 ```
 
+For Codex or another harness supported by the [Skills CLI](https://github.com/vercel-labs/skills),
+run from the destination project and point at this checkout:
+
+```sh
+npx skills add /path/to/frigo-skills --skill asset-3d animation-3d -a codex
+```
+
 ## Repository structure
 
 ```
@@ -60,10 +70,12 @@ frigo-skills/
 │   │   ├── SKILL.md
 │   │   ├── references/       # pipeline-yaml.md, cli-reference.md, concepts.md
 │   │   └── evals/evals.json
-│   └── azure-databricks/
-│       ├── SKILL.md
-│       ├── references/       # cli.md, apps.md, bundles.md
-│       └── evals/evals.json
+│   ├── azure-databricks/
+│   │   ├── SKILL.md
+│   │   ├── references/       # cli.md, apps.md, bundles.md
+│   │   └── evals/evals.json
+│   ├── asset-3d/             # modeling, local workflow graphs and asset QA
+│   └── animation-3d/         # animation workflow, sample rig and clip QA
 ├── README.md
 └── LICENSE
 ```
@@ -79,6 +91,7 @@ Drop a new folder under `skills/`:
 skills/<your-skill>/
 ├── SKILL.md          # YAML frontmatter: name + a pushy, disambiguated description
 ├── references/       # optional deep-dive docs, loaded on demand
+├── scripts/           # optional executable helpers
 └── evals/evals.json  # optional test cases
 ```
 

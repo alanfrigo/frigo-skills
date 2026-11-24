@@ -1,0 +1,12 @@
+{
+  "1": {"class_type":"LoadImage","inputs":{"image":"front.png"}},
+  "2": {"class_type":"ImageOnlyCheckpointLoader","inputs":{"ckpt_name":"hunyuan3d-dit-v2-mv_fp16.safetensors"}},
+  "3": {"class_type":"CLIPVisionEncode","inputs":{"clip_vision":["2",1],"image":["1",0],"crop":"none"}},
+  "4": {"class_type":"Hunyuan3Dv2ConditioningMultiView","inputs":{"front":["3",0]}},
+  "5": {"class_type":"EmptyLatentHunyuan3Dv2","inputs":{"resolution":3072,"batch_size":1}},
+  "6": {"class_type":"ModelSamplingAuraFlow","inputs":{"model":["2",0],"shift":1.0}},
+  "7": {"class_type":"KSampler","inputs":{"model":["6",0],"positive":["4",0],"negative":["4",1],"latent_image":["5",0],"seed":42,"steps":12,"cfg":7.5,"sampler_name":"euler","scheduler":"normal","denoise":1.0}},
+  "8": {"class_type":"VAEDecodeHunyuan3D","inputs":{"samples":["7",0],"vae":["2",2],"num_chunks":8000,"octree_resolution":128}},
+  "9": {"class_type":"VoxelToMesh","inputs":{"voxel":["8",0],"algorithm":"surface net","threshold":0.6}},
+  "10": {"class_type":"SaveGLB","inputs":{"mesh":["9",0],"filename_prefix":"asset-3d/mesh"}}
+}

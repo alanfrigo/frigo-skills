@@ -1,0 +1,40 @@
+{
+  "skill_name": "asset-3d",
+  "evals": [
+    {
+      "id": 1,
+      "name": "exact-modular-prop",
+      "prompt": "Crie um armário modular 80 × 40 × 160 cm para Godot, estilo low poly, folha da porta separada com pivô na dobradiça, collision proxy, máximo 3.000 triângulos. Não use serviço externo.",
+      "expected_output": "Editable source and runtime GLB from a measured procedural or authored Blender build; evidence of dimensions, hinge behavior and triangle budget in Godot.",
+      "files": [],
+      "assertions": [
+        {"text": "Uses a dimension-driven workflow rather than guessing mechanical dimensions from an image generator", "type": "content"},
+        {"text": "Preserves the door pivot and demonstrates it in motion; does not run automatic grounding on that component", "type": "content"},
+        {"text": "Reports actual exported triangle count and verifies the collision proxy and import in Godot, or marks an unavailable check not assessed", "type": "content"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "local-organic-reconstruction",
+      "prompt": "Use only my local ComfyUI and Blender to compare TRELLIS.2 and Pixal3D on a single approved reference before deciding which to spend more GPU time on. I need a textured static prop, not just a thumbnail.",
+      "expected_output": "Local preflight, matched candidate settings, saved source PNG and prompt graph/seed, exported GLBs, geometry/material evidence with an explicit winner or rejection.",
+      "files": [],
+      "assertions": [
+        {"text": "Does not upload references to a cloud provider or say a generation passed without a retrieved GLB", "type": "content"},
+        {"text": "Uses the same reference and comparable seeds/profiles, reports actual runtime/cost and runs multiview clay and material review", "type": "content"},
+        {"text": "Rejects absent faces, floating parts and excessive texture or triangle costs even if the front render looks good", "type": "content"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "hero-not-ready-to-rig",
+      "prompt": "I got an AI generated humanoid GLB from one image. Can we decimate it then ship the skinned hero? Fingers are fused and a smile is painted in the texture.",
+      "expected_output": "No game-ready claim; a geometry-first correction plan with consistent rig-friendly references, deformable joints and separate face/hand verification.",
+      "files": [],
+      "assertions": [
+        {"text": "Does not conflate decimation or shape generation with editable mouth/finger topology", "type": "content"},
+        {"text": "Recommends retopology/rebuild, joint/facial loops and an explicit extreme-pose deformation handoff to animation-3d", "type": "content"}
+      ]
+    }
+  ]
+}

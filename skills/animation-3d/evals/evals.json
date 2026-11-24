@@ -1,0 +1,57 @@
+{
+  "skill_name": "animation-3d",
+  "evals": [
+    {
+      "id": 0,
+      "name": "williams-heavy-lift",
+      "prompt": "Block a 2-second 24 fps Blender shot: an overconfident courier tries to lift a heavier-than-expected case. The case must clear the floor at frame 34 and stay in both hands after lift. Give me a shot plan I can key and review; don't recommend AI motion generation.",
+      "expected_output": "A compact frame-indexed beat sheet and a Williams-led pose and spacing plan with an anticipation, readable change of thought, concrete hand/weight tests, and critique from the camera at full speed.",
+      "files": [],
+      "assertions": [
+        {"text": "Distinguishes timing from spacing and proposes a meaningful alternate spacing without moving the required frame 34 beat", "type": "content"},
+        {"text": "Uses storytelling keys, extremes, and expressive breakdowns in a practical blocking order, with relevant printed Williams pages", "type": "content"},
+        {"text": "Separates contact, take-up of weight, and clearance; plans evaluated grips and whole-body effort rather than moving only the arms", "type": "content"},
+        {"text": "Proposes stepped blocking and a full-speed playblast from the shot camera before polish", "type": "content"}
+      ]
+    },
+    {
+      "id": 1,
+      "name": "world-plants-traveling-cycle",
+      "prompt": "My evaluated Blender rig Runner has root bone Mover and marker bones Toe.L and Toe.R. Frames 1–25 are a traveling cycle; Toe.L should stay planted on the fixed floor during 2–11, Toe.R during 14–23. Fail CI if either moves more than 8 mm, but don't require the root to end at its starting place. What command should I use, and what might still look bad in-game?",
+      "expected_output": "A command using the installed script, provided rig, root, inclusive marker windows, --max-contact-drift 0.008, --loop --allow-root-cycle, and Blender's --python-exit-code. Explains metric/reference and reviews seam velocity, transitions, terrain clearance, root delta, and imported playback separately.",
+      "files": [],
+      "assertions": [
+        {"text": "Names the evaluated world-space toe marker point and explains why each threshold is measured from the window's first sample", "type": "content"},
+        {"text": "Uses both requested marker windows, 0.008 meters, and specifies --python-exit-code before the Blender script", "type": "content"},
+        {"text": "Uses root-relative pose closure and does not impose zero root movement on the traveling cycle", "type": "content"},
+        {"text": "Does not claim endpoint transforms prove smooth velocity, foot clearance, performance, or game import", "type": "content"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "fixture-positive-and-negative",
+      "prompt": "I need a local animation QA fixture to prove that a loop can close while a planted foot still slips. Give me exact Blender commands for the positive and negative case and what should come across in Godot. No downloads.",
+      "expected_output": "Commands for make_sample.py and check_animation.py using the clean and slipping variants, with editable blend, GLB and visual samples. The planted drift, expected threshold failure and loop closure are checked independently. Describes how to confirm actual imported clip playback in Godot.",
+      "files": [],
+      "assertions": [
+        {"text": "Generates both fixtures without downloading dependencies and uses --no-render for the negative when appropriate", "type": "content"},
+        {"text": "Expects a pass for the clean case and Toe.L drift around frame 13 in the negative despite a closing seam", "type": "content"},
+        {"text": "Checks name TapRecovery, a skinned mesh and animated runtime playback rather than just glTF parsing", "type": "content"},
+        {"text": "Separates expected values from observations unless the commands or import checks were actually run", "type": "content"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "motionbricks-scope-and-rights",
+      "prompt": "Can I drop NVIDIA MotionBricks into Blender, type a prompt, and ship its sample mocap-derived stand-to-sit animation on a custom hero? The chair touch must hit a specific 24 fps frame. Give me a responsible experimental plan and a production choice.",
+      "expected_output": "Rejects the proposed path, explains the upstream pose contract and licenses without conflating them, and proposes authored or licensed alternatives with targeted local evaluation and comparative contact/timing QA.",
+      "files": [],
+      "assertions": [
+        {"text": "Explains 30 Hz, four context poses, one to four target poses, SOMA/G1, and TensorRT NVIDIA GPU requirements using official sources", "type": "content"},
+        {"text": "Distinguishes code and model terms from the NVIDIA sample data evaluation license and does not bless sample derivatives for distribution", "type": "content"},
+        {"text": "Requires retargeting onto the custom rig, contact and exact-beat checks, and artist control of the performance", "type": "content"},
+        {"text": "Recommends a manual or rights-cleared baseline and compares cold/warm and cleanup times without asserting measured performance", "type": "content"}
+      ]
+    }
+  ]
+}

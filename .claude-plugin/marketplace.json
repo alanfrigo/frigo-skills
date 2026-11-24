@@ -12,13 +12,16 @@
     {
       "name": "frigo-skills",
       "source": "./",
-      "description": "Drone CI/CD and Azure Databricks skills (CLI, Apps, Bundles).",
+      "description": "Drone CI/CD, Azure Databricks, 3D asset production and 3D animation skills.",
       "category": "development",
       "keywords": [
         "drone",
         "ci-cd",
         "azure",
         "databricks",
+        "3d-assets",
+        "blender",
+        "comfyui",
         "cli"
       ]
     }
